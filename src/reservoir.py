@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.init as init
 import math
 
+
 class ESN(nn.Module):
     def __init__(
         self,
@@ -13,11 +14,12 @@ class ESN(nn.Module):
     ):
         """
         Args:
-            size_in (int): size of input layer.
-            size_res (int): size of reservor layer.
-            size_out (int): size of output layer.
-            reset_weight_res(callable): calleable object to reset
-                reset weight of reservoir layer.
+            size_in (int): 入力層のサイズ
+            size_res (int): リザバー層のサイズ
+            size_out (int): 出力層のサイズ
+            reset_weight_res (callable): リザバー層の重みを引数で受け取り,
+                それをリセットする呼び出し可能なオブジェクトです.
+                関数や__call__を実装したオブジェクトなどがそれに該当します.
         """
         super(ESN, self).__init__()
         self.size_in = size_in
@@ -33,7 +35,7 @@ class ESN(nn.Module):
 
     def reset_parameters(self):
         """
-        Reset this parameter of ESN.
+        ESNのパラメータをリセットします.
         """
         self._reset_weight_in(self.weight_in)
         self.reset_weight_res(self.weight_res)
@@ -42,13 +44,13 @@ class ESN(nn.Module):
 
     def _reset_weight_in(self, weight):
         """
-        Reset weight of input layer.
+        入力層の重みをリセットする.
         """
         init.kaiming_uniform_(weight, a=math.sqrt(5))
 
     def _reset_bias(self):
         """
-        Reset bias of reservoir unit.
+        リザバー層のバイアスをリセット
         """
         fan_in, _ = init._calculate_fan_in_and_fan_out(self.weight_in)
         bound = 1 / math.sqrt(fan_in)
@@ -56,19 +58,24 @@ class ESN(nn.Module):
 
     def _reset_state(self):
         """
-        Reset state to zeros.
+        状態をゼロでリセット
         """
         init.zeros_(self.state)
 
     def forward(self, x):
         """
-        Args:
-            x: input
         Math:
-        `x(t + 1) = W_{in}u + W_{res}x(t) + b`
+        x(t) = W_{in}u(t) + W_{res}x(t - 1) + b
+        y = W_{out}x(t)
+
         Where:
-            x(t + 1): State of next reservoir layer.
-            W_{in}: weight_in
+            x(t): リザバー層の状態
+            W_{in}: 入力層の重み
+            u(t): 入力データ
+            W_{res}: リザバー層の重み
+            x(t + 1): 一つ前のリザバー層
+            b: リザバー層のバイアス
+            y: ESNの出力
         """
         self.state = torch.tanh(
             self.weight_in @ x +
@@ -80,7 +87,7 @@ class ESN(nn.Module):
 
 def reset_weight_res(weight_res):
     """
-    Improvisation callable for argument of ESN.
+    ESNの第４引数のための即興の関数
+    (とりあえずランダムでリセット)
     """
     init.kaiming_uniform_(weight_res, a=math.sqrt(5))
-

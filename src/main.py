@@ -4,7 +4,8 @@ import torch
 
 def main():
     model = reservoir.ESN(1, 32, 1, reservoir.reset_weight_res)
-    print(model.forward(torch.Tensor([1])))
+    out = model(torch.Tensor([1]))
+    print(out)
 
 
 if __name__ == '__main__':
