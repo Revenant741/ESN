@@ -82,7 +82,7 @@ class ESN(nn.Module):
             self.weight_res @ self.state +
             self.bias
         )
-        return self.Linear(self.state)
+        return self.Linear(self.state.T)
 
 
 def reset_weight_res(weight_res):
