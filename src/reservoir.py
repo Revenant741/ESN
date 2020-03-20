@@ -76,6 +76,12 @@ class ESN(nn.Module):
             x(t + 1): 一つ前のリザバー層
             b: リザバー層のバイアス
             y: ESNの出力
+
+        Tips:
+            全結合層で引数の状態を転置しているのは
+            (size_res x 1)の形でESNの状態を表しているが
+            nn.Linearが引数で受け取るときは(1 x size_res)
+            の形で要求しているためである.
         """
         self.state = torch.tanh(
             self.weight_in @ x +
@@ -88,6 +94,6 @@ class ESN(nn.Module):
 def reset_weight_res(weight_res):
     """
     ESNの第４引数のための即興の関数
-    (とりあえずランダムでリセット)
+    (とりあえずランダムでリセットする.)
     """
     init.kaiming_uniform_(weight_res, a=math.sqrt(5))
