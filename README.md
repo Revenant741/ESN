@@ -12,7 +12,7 @@
 1. 次にdockerのコンテナを作成します. 
 このdockerfileの環境では`/root/projects`ディレクトリが作成されるためそこにマウントします.\
 ``docker run -v `pwd`:/root/projects -it --name esn esn:20.03``
-1. 最後にコンテナの中から抜けます
+1. 最後にコンテナの中から抜けます \
 `exit`
 
 ### 実行例(reservoir_test.py)
