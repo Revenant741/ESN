@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     curl \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/ \
- && mkdir /root/projects
+ && mkdir /root/work
 
 WORKDIR /root
 
@@ -32,10 +32,11 @@ RUN mkdir -p ~/.vim/pack/git-plugins/start \
  && cp ~/.latte488/configs/.vimrc ~/
 
 # python
-RUN pip install yacs \
- && pip install flake8 \
+RUN pip install flake8 \
  && pip install tensorflow \
- && pip install deap
+ && pip install matplotlib
+
+WORKDIR /root/work
 
 CMD ["/bin/bash", "--login"]
 

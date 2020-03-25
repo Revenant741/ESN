@@ -4,8 +4,9 @@ import torch
 from torch import nn
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
+import matplotlib.pyplot as plt
 
-EPOCH = 8
+EPOCH = 20
 BATCH_SIZE = 64
 TIME_STEP = 28
 INPUT_SIZE = 28
@@ -41,7 +42,7 @@ class RNN(nn.Module):
 
         self.rnn = res.ESN(
             size_in=INPUT_SIZE,
-            size_res=24,
+            size_res=128,
             size_out=10,
             reset_weight_res=res.reset_weight_res,
         )
@@ -67,6 +68,9 @@ print(model)
 optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 loss_func = nn.CrossEntropyLoss()
 
+
+epochs = []
+accuracys = []
 for epoch in range(EPOCH):
     for step, (b_x, b_y) in enumerate(train_loader):
         b_x = b_x.view(-1, 28, 28)
@@ -85,8 +89,14 @@ for epoch in range(EPOCH):
             train_loss_str = f'train loss: {loss.data.numpy():.4f}'
             test_accuracy_str = f'test_accuracy: {accuracy:.2f}'
             print(f'{epoch_str} | {train_loss_str} | {test_accuracy_str}')
+            epochs.append(epoch + 1)
+            accuracys.append(accuracy)
 
 test_output = model(test_x[:10].view(-1, 28, 28))
 pred_y = torch.max(test_output, 1)[1].data.numpy()
 print(f'{pred_y} prediction number')
 print(f'{test_y[:10]} real number')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.plot(epochs, accuracys)
+plt.savefig('figure.png')
