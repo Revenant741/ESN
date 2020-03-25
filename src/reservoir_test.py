@@ -89,9 +89,17 @@ for epoch in range(EPOCH):
             train_loss_str = f'train loss: {loss.data.numpy():.4f}'
             test_accuracy_str = f'test_accuracy: {accuracy:.2f}'
             print(f'{epoch_str} | {train_loss_str} | {test_accuracy_str}')
-            epochs.append(epoch + 1)
-            accuracys.append(accuracy)
-
+    test_output = model(test_x)
+    pred_y = torch.max(test_output, 1)[1].data.numpy()
+    accuracy = float(
+        (pred_y == test_y).astype(int).sum()) / float(test_y.size)
+    epoch_str = f'Epoch: {epoch}'
+    train_loss_str = f'train loss: {loss.data.numpy():.4f}'
+    test_accuracy_str = f'test_accuracy: {accuracy:.2f}'
+    print(f'{epoch_str} | {train_loss_str} | {test_accuracy_str}')
+    epochs.append(epoch + 1)
+    accuracys.append(accuracy)
+        
 test_output = model(test_x[:10].view(-1, 28, 28))
 pred_y = torch.max(test_output, 1)[1].data.numpy()
 print(f'{pred_y} prediction number')
