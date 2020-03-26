@@ -5,7 +5,7 @@ from torch import nn
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 
-EPOCH = 8
+EPOCH = 20
 BATCH_SIZE = 64
 TIME_STEP = 28
 INPUT_SIZE = 28
@@ -41,7 +41,7 @@ class RNN(nn.Module):
 
         self.rnn = res.ESN(
             size_in=INPUT_SIZE,
-            size_res=24,
+            size_res=128,
             size_out=10,
             reset_weight_res=res.reset_weight_res,
         )
