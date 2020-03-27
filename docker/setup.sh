@@ -38,6 +38,7 @@ docker create \
     -it \
     --ipc=host \
     --net=host \
+    --gpus all \
     -e D_IMAGE=${d_image} \
     -e D_USER=${d_user} \
     -e D_UID=${d_uid} \
