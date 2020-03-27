@@ -22,6 +22,7 @@ python src/reservoir_test.py
 ## このdockerの環境のアンインストール
 
 dockerのimageとcontainerの削除と`docker image prune`を行います.
+(base imageは削除されません)
 ```bash
 python3 clean.py
 ```
