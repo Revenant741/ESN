@@ -15,10 +15,8 @@ python3 setup.py
 ```
 ## 実行例(reservoir_test.py)
 ```bash
-docker start esn
-docker attach esn
-cd projects
-python reservoir_test.py
+docker start -i esn
+python src/reservoir_test.py
 ```
 
 ## このdockerの環境のアンインストール
