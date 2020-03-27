@@ -1,16 +1,19 @@
 # ESN
 
-## 実行するまでの手順
+## 環境構築
 
-### 環境構築
+`toml`ファイルをpythonで扱うためモジュールがない場合はインストールします.
+```bash
+pip3 install toml
+```
+
+`config.toml`に基づいてdockerのimageとcontainerを作成します.
 ```bash
 git clone https://github.com/latte488/ESN.git
 cd ESN
-docker build -t esn:20.03 .
-docker run -v `pwd`:/root/projects -it --name esn esn:20.03
-exit
+python3 setup.py
 ```
-### 実行例(reservoir_test.py)
+## 実行例(reservoir_test.py)
 ```bash
 docker start esn
 docker attach esn
@@ -18,7 +21,7 @@ cd projects
 python reservoir_test.py
 ```
 
-### 注意点
-* コンテナに入るときにrootで入るためコンテナ内でファイルを作成すると戻った時に権限がrootになってしまいます.
-  * 解決策は外でコーディングして実行時のみコンテナで行うことです.
-  * gitの設定も毎回する必要があるから基本作業はコンテナ外がベストなのかもしれません.
+## このdockerの環境のアンインストール
+```bash
+python3 clean.py
+```
