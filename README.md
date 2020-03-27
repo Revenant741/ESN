@@ -22,6 +22,8 @@ python reservoir_test.py
 ```
 
 ## このdockerの環境のアンインストール
+
+dockerのimageとcontainerの削除と`docker image prune`を行います.
 ```bash
 python3 clean.py
 ```
