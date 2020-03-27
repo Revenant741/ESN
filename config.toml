@@ -1,0 +1,3 @@
+[docker]
+base_image = "pytorch/pytorch:1.4-cuda10.1-cudnn7-devel"
+image = "esn:0.1"

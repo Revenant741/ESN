@@ -1,5 +1,5 @@
 # figure
-*.png
+image/
 
 # mnist
 mnist/
