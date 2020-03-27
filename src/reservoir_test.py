@@ -5,6 +5,7 @@ from torch import nn
 import torchvision.datasets as dsets
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
 EPOCH = 20
 BATCH_SIZE = 64
@@ -89,6 +90,7 @@ for epoch in range(EPOCH):
             train_loss_str = f'train loss: {loss.data.numpy():.4f}'
             test_accuracy_str = f'test_accuracy: {accuracy:.2f}'
             print(f'{epoch_str} | {train_loss_str} | {test_accuracy_str}')
+            break
     test_output = model(test_x)
     pred_y = torch.max(test_output, 1)[1].data.numpy()
     accuracy = float(
@@ -99,11 +101,12 @@ for epoch in range(EPOCH):
     print(f'{epoch_str} | {train_loss_str} | {test_accuracy_str}')
     epochs.append(epoch + 1)
     accuracys.append(accuracy)
-        
+
 test_output = model(test_x[:10].view(-1, 28, 28))
 pred_y = torch.max(test_output, 1)[1].data.numpy()
 print(f'{pred_y} prediction number')
 print(f'{test_y[:10]} real number')
+plt.gca().get_xaxis().set_major_locator(ticker.MaxNLocator(integer=True))
 plt.xlabel('Epoch')
 plt.ylabel('Accuracy')
 plt.plot(epochs, accuracys)
