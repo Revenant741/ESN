@@ -10,16 +10,12 @@ class ESN(nn.Module):
         size_in,
         size_res,
         size_out,
-        reset_weight_res
     ):
         """
         Args:
             size_in (int): 入力層のサイズ
             size_res (int): リザバー層のサイズ
             size_out (int): 出力層のサイズ
-            reset_weight_res (callable): リザバー層の重みを引数で受け取り,
-                それをリセットする呼び出し可能なオブジェクトです.
-                関数や__call__を実装したオブジェクトなどがそれに該当します.
         """
         super(ESN, self).__init__()
         self.size_in = size_in
@@ -30,18 +26,24 @@ class ESN(nn.Module):
         self.register_buffer('bias', torch.Tensor(size_res))
         self.register_buffer('state', torch.Tensor(size_res))
         self.register_buffer('noise', torch.Tensor(size_res))
-        self.reset_weight_res = reset_weight_res
         self.reset_parameters()
         self.Linear = nn.Linear(size_res, size_out)
 
     def reset_parameters(self):
         self._reset_weight_in()
-        self.reset_weight_res(self.weight_res)
+        self._reset_weight_res()
         self._reset_bias()
         self._reset_state()
 
     def _reset_weight_in(self):
         init.kaiming_uniform_(self.weight_in, a=math.sqrt(5))
+    
+    def _reset_weight_res(self):
+        """
+        ESNの第４引数のための即興の関数
+        (とりあえずランダムでリセットする.)
+        """
+        init.kaiming_uniform_(self.weight_res, a=math.sqrt(5))
 
     def _reset_bias(self):
         fan_in, _ = init._calculate_fan_in_and_fan_out(self.weight_in)
@@ -133,9 +135,3 @@ class LeakyESN(ESN):
         return self.Linear(self.state)
 
 
-def reset_weight_res(weight_res):
-    """
-    ESNの第４引数のための即興の関数
-    (とりあえずランダムでリセットする.)
-    """
-    init.kaiming_uniform_(weight_res, a=math.sqrt(5))

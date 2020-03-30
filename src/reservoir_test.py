@@ -48,7 +48,6 @@ class RNN(nn.Module):
             size_in=INPUT_SIZE,
             size_res=2000,
             size_out=10,
-            reset_weight_res=res.reset_weight_res,
         )
 
     def forward(self, x):
