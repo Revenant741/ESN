@@ -25,11 +25,11 @@ class ESN(nn.Module):
         self.size_in = size_in
         self.size_res = size_res
         self.size_out = size_out
-        self.weight_in = torch.Tensor(size_in, size_res)
-        self.weight_res = torch.Tensor(size_res, size_res)
-        self.bias = torch.Tensor(size_res)
-        self.state = torch.Tensor(size_res)
-        self.noise = torch.Tensor(size_res)
+        self.register_buffer('weight_in', torch.Tensor(size_in, size_res))
+        self.register_buffer('weight_res', torch.Tensor(size_res,size_res))
+        self.register_buffer('bias', torch.Tensor(size_res))
+        self.register_buffer('state', torch.Tensor(size_res))
+        self.register_buffer('noise', torch.Tensor(size_res))
         self.reset_weight_res = reset_weight_res
         self.reset_parameters()
         self.Linear = nn.Linear(size_res, size_out)
