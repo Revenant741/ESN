@@ -7,6 +7,7 @@ import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import argparse
+import random
 
 def add_arguments(parser):
     parser.add_argument('--device', type=str, default='cuda', help='cpu or cuda')

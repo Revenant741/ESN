@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.init as init
 import math
-
+import random
 
 class LeakyESN(nn.Module):
     def __init__(
