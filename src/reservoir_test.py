@@ -9,12 +9,13 @@ import matplotlib.ticker as ticker
 import argparse
 
 def add_arguments(parser):
-    parser.add_argument('--device', type=str, default='cpu', help='cpu or cuda')
-    parser.add_argument('--epoch', type=int, default=1)
+    parser.add_argument('--device', type=str, default='cuda', help='cpu or cuda')
+    parser.add_argument('--epoch', type=int, default=100)
     parser.add_argument('--batch_size', type=int, default=64)
     parser.add_argument('--lr', type=float, default=0.0001, help='learning rate')
     parser.add_argument('--download_mnist', type=bool, default=True, help='True when you download mnist')
-    parser.add_argument('--res_size', type=int, default=1024, help='size of reservoir unit')
+    parser.add_argument('--res_size', type=int, default=1200, help='size of reservoir unit')
+    parser.add_argument('--leaky', type=int, default=0.7, help='Leaky rate')
 
 def prepare_dataset(args):
     train_data = dsets.MNIST(
@@ -46,10 +47,11 @@ class RNN(nn.Module):
     def __init__(self, args):
         super(RNN, self).__init__()
 
-        self.esn = res.ESN(
+        self.leakyesn = res.LeakyESN(
             size_in=28,
             size_res=args.res_size,
             size_out=10,
+            leaky=args.leaky
         )
 
     def forward(self, x):
@@ -59,13 +61,13 @@ class RNN(nn.Module):
         """
 
         batch_size, time_size, _ = x.shape
-        
-        out = torch.Tensor(batch_size, self.esn.size_out).to(x.device)
+
+        out = torch.Tensor(batch_size, self.leakyesn.size_out).to(x.device)
 
         for batch_i, batch in enumerate(x):
             for inputs in batch[:-1]:
-                self.esn(inputs)
-            out[batch_i] = self.esn(batch[-1])
+                self.leakyesn(inputs)
+            out[batch_i] = self.leakyesn(batch[-1])
         return out
 
 def train(args, model, train_loader, test_x, test_y):
@@ -110,13 +112,13 @@ def train_to_image(epochs, acuuracys):
     plt.xlabel('Epoch')
     plt.ylabel('Accuracy')
     plt.plot(epochs, accuracys)
-    plt.savefig('image/esn-mnist-100epoch.png')
+    plt.savefig('image/leakyesn0.6-mnist-100epoch-1200.png')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     add_arguments(parser)
     args = parser.parse_args()
-    
+
     train_loader, test_x, test_y = prepare_dataset(args)
 
     epochs, accuracys = train(args, RNN(args), train_loader, test_x, test_y)
