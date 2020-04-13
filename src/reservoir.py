@@ -45,6 +45,9 @@ class LeakyESN(nn.Module):
         ESNの第４引数のための即興の関数
         (とりあえずランダムでリセットする.)
         """
+        adjency = torch.Tensor([random.randint(0, 1) for _ in range(self.size_res**2)])
+        init.kaiming_uniform_(self.weight_res, a=math.sqrt(5))
+        self.weight_res *= adjency.view(self.size_res, self.size_res)
         init.kaiming_uniform_(self.weight_res, a=math.sqrt(5))
 
     def _reset_bias(self):
